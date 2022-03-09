@@ -17,7 +17,7 @@ services:
       # Uncomment strings below to enable the JSON Web Token validation.
       #- JWT_ENABLED=true
       #- JWT_SECRET=secret
-      #- JWT_HEADER=Authorization
+      #- JWT_HEADER=AuthorizationJwt
       #- JWT_IN_BODY=true
     ports:
       - '80:80'
