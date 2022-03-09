@@ -39,6 +39,9 @@
 
 ## The rest of this file is the official `README.md`. I will not change anything in it, it may not work. If you care about something, make a pull request and we'll figure it out.
 
+<details>
+	
+	
 * [Overview](#overview)
 * [Functionality](#functionality)
 * [Recommended System Requirements](#recommended-system-requirements)
@@ -378,3 +381,6 @@ If you have any problems with or questions about this image, please visit our of
 
   [1]: https://forum.onlyoffice.com
   [2]: https://stackoverflow.com/questions/tagged/onlyoffice
+
+	
+</details>
