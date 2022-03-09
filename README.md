@@ -1,7 +1,10 @@
 # FOR ARM64 ONLY
 
 ## Onlyoffice-Documentserver with `arm64` support
+
 ### This runs a modified version of the official deb package with the help of `qemu` and `binfmt`
+### It's also based on the official `Dockerfile` and `docker-compose.yml` files with all the needed files as well
+
 ### To see how I did it, look [at this comment](https://github.com/ONLYOFFICE/DocumentServer/issues/152#issuecomment-1061902836) - I used this method and put it in `Dockerfile` so you don't have to mess aroud with your system in any weird ways (like in the mentioned comment)
 
 ## Installation
