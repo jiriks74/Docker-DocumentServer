@@ -14,7 +14,7 @@
 
 #### 2. Build the docker image 
    `docker-compose build` 
-   - This will take a long time. The things that takte the longes are `dpkg-deb: building package 'onlyoffice-documentserver' in 'onlyoffice-documentserver-modified.deb'` and `Generating presentation themes...` - Both of them take like 20 minutes, it's not stuck, it's just slow
+   - This will take a long time. The things that takte the longes are `dpkg-deb: building package 'onlyoffice-documentserver' in 'onlyoffice-documentserver-modified.deb'` and `Generating presentation themes...` - Both of them take like 20 minutes, it's not stuck, it's just slow (SSD will probably help, I'm running only on HDD)
 
 #### 3. Create and start the container
    `docker-compose up -d --build` 
