@@ -38,6 +38,22 @@
 
    `docker-compose up -d`
 
+## Setup `Secret key`with Nextcloud
+1. Uncomment four lines starting with `JWT` in `docker-compose`
+2. Set your secret on line `JWT_SECRET=yourSecret`
+3. Open Nexcloud's `config.php` (by defauld `/var/www/nextcloud/config/config.php`)
+4. Add this to the 2nd last line (before the line with `);`) and paste in your secret (3rd last line)
+```php
+  'onlyoffice' =>
+    array (
+      "jwt_secret" => "yourSecret",
+      "jwt_header" => "AuthorizationJwt"
+  )
+```
+5. Go to your Nextcloud settings, navigate to Onlyoffice settings
+6. Add your server Address and Secret key
+7. Save
+
 ---
 
 ## The rest of this file is the official `README.md`. I will not change anything in it, it may not work. If you care about something, make a pull request and we'll figure it out.
