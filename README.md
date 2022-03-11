@@ -17,7 +17,7 @@
    - This will take a long time. The things that takte the longes are `dpkg-deb: building package 'onlyoffice-documentserver' in 'onlyoffice-documentserver-modified.deb'` and `Generating presentation themes...` - Both of them take like 20 minutes, it's not stuck, it's just slow (SSD will probably help, I'm running only on HDD)
 
 #### 3. Create and start the container
-   `docker-compose up -d --build` 
+   `docker-compose up -d` 
    - This will start the server. It is set to be automatically started/restarted so as long you have docker running on startup this will start automatically
 
 ## Updating
