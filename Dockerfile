@@ -105,6 +105,7 @@ RUN dpkg-deb -b /build/onlyoffice /build/onlyoffice-documentserver-modified.deb
 
 COPY config /app/ds/setup/config/
 COPY run-document-server.sh /app/ds/run-document-server.sh
+COPY largeFiles.sh /app/ds/largeFiles.sh
 
 EXPOSE 80 443
 
