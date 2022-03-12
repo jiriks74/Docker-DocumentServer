@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [! -f /app/ds/largeFiles.lck]; then
+	/app/ds/largeFiles.sh
+fi
+
 function clean_exit {
   /usr/bin/documentserver-prepare4shutdown.sh
 }

@@ -19,6 +19,11 @@ services:
       #- JWT_SECRET=secret
       #- JWT_HEADER=AuthorizationJwt
       #- JWT_IN_BODY=true
+      
+      # Uncomment strings below to enable larger files
+      #- LARGER_FILES = true
+      #- MAX_DOWNLOAD_SIZE = 104857600 # Download size in bytes
+      #- MAX_UNCOMPRESSED_SIZE = 300 # Uncompressed of a file in MB
     ports:
       - '80:80'
       - '443:443'
