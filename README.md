@@ -1,3 +1,66 @@
+# FOR ARM64 ONLY
+
+## Onlyoffice-Documentserver with `arm64` support
+
+### This runs a modified version of the official deb package with the help of `qemu` and `binfmt`
+### It's also based on the official `Dockerfile` and `docker-compose.yml` files with all the needed files as well
+
+### To see how I did it, look [at this comment](https://github.com/ONLYOFFICE/DocumentServer/issues/152#issuecomment-1061902836) - I used this method and put it in `Dockerfile` so you don't have to mess aroud with your system in any weird ways (like in the mentioned comment)
+
+## Installation
+#### 1. Clone the repository (for example to your home directory `cd /home/$USER/`) 
+
+   `git clone https://github.com/jiriks74/Docker-DocumentServer-Arm64.git && cd Docker-DocumentServer-Arm64`
+
+#### 2. Build the docker image 
+   `docker-compose build` 
+   - This will take a long time. The things that takte the longes are `dpkg-deb: building package 'onlyoffice-documentserver' in 'onlyoffice-documentserver-modified.deb'` and `Generating presentation themes...` - Both of them take like 20 minutes, it's not stuck, it's just slow (SSD will probably help, I'm running only on HDD)
+
+#### 3. Create and start the container
+   `docker-compose up -d` 
+   - This will start the server. It is set to be automatically started/restarted so as long you have docker running on startup this will start automatically
+
+## Updating
+#### 1. Stop and delete the old container
+
+   `docker-compose down`
+   
+#### 2. (optional) Clear the docker cache 
+####    - ! This will remove all unused cache images ! (good for saving space, bad if you develop with and need cache, but you understand it at that point)
+
+   `docker rmi $(docker images -f "dangling=true" -q)`
+
+#### 4. Rebuild the image without cache
+
+   `docker-compose build --no-cache`
+   
+#### 3. Create and start the new container
+
+   `docker-compose up -d`
+
+## Setup `Secret key`with Nextcloud
+1. Uncomment four lines starting with `JWT` in `docker-compose`
+2. Set your secret on line `JWT_SECRET=yourSecret`
+3. Open Nexcloud's `config.php` (by defauld `/var/www/nextcloud/config/config.php`)
+4. Add this to the 2nd last line (before the line with `);`) and paste in your secret (3rd last line)
+```php
+  'onlyoffice' =>
+    array (
+      "jwt_secret" => "yourSecret",
+      "jwt_header" => "AuthorizationJwt"
+  )
+```
+5. Go to your Nextcloud settings, navigate to Onlyoffice settings
+6. Add your server Address and Secret key
+7. Save
+
+---
+
+## The rest of this file is the official `README.md`. I will not change anything in it, it may not work. If you care about something, make a pull request and we'll figure it out.
+
+<details>
+	
+	
 * [Overview](#overview)
 * [Functionality](#functionality)
 * [Recommended System Requirements](#recommended-system-requirements)
@@ -337,3 +400,6 @@ If you have any problems with or questions about this image, please visit our of
 
   [1]: https://forum.onlyoffice.com
   [2]: https://stackoverflow.com/questions/tagged/onlyoffice
+
+	
+</details>
