@@ -103,9 +103,6 @@ RUN sed -i 's/^Depends: debconf (>= 0.5) | debconf-2.0, adduser, ca-certificates
 
 RUN dpkg-deb -b /build/onlyoffice /build/onlyoffice-documentserver-modified.deb
 
-COPY config /app/ds/setup/config/
-COPY run-document-server.sh /app/ds/run-document-server.sh
-
 EXPOSE 80 443
 
 ARG COMPANY_NAME=onlyoffice
@@ -119,10 +116,14 @@ RUN service postgresql start && \
     apt-get -yq install /build/onlyoffice-documentserver-modified.deb && \
     service postgresql stop && \
     service supervisor stop && \
-    chmod 755 /app/ds/*.sh && \
     rm -rf /build/ && \
     rm -rf /var/log/$COMPANY_NAME && \
     rm -rf /var/lib/apt/lists/*
+
+COPY config /app/ds/setup/config/
+COPY run-document-server.sh /app/ds/run-document-server.sh
+
+RUN chmod 755 /app/ds/*.sh
 
 VOLUME /var/log/$COMPANY_NAME /var/lib/$COMPANY_NAME /var/www/$COMPANY_NAME/Data /var/lib/postgresql /var/lib/rabbitmq /var/lib/redis /usr/share/fonts/truetype/custom
 
