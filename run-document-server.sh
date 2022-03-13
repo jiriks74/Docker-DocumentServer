@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [! -f /app/ds/largeFiles.lck]; then
+if [[ ! -e /app/ds/largeFiles.lck ]]; then
 	/app/ds/largeFiles.sh
 fi
 
