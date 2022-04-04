@@ -8,8 +8,10 @@
 ### To see how I did it, look [at this comment](https://github.com/ONLYOFFICE/DocumentServer/issues/152#issuecomment-1061902836) - I used this method and put it in `Dockerfile` so you don't have to mess aroud with your system in any weird ways (like in the mentioned comment)
 
 ## Installation
-#### 1. Install `qemu`, `qemu-user`, `qemu-user-static` and `binfmt-support` (RPiOS packages)
-    `sudo apt install qemu-user qemu-user-static qemu binfmt-support`
+
+#### 1. Install `qemu-user`, `qemu-user-static`, `qemu` and `binfmt-support`
+
+   `sudo apt update && sudo apt install qemu-user qemu-user-static qemu binfmt-support`
 
 #### 2. Clone the repository (for example to your home directory `cd /home/$USER/`) 
 
