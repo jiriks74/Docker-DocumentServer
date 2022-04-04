@@ -9,6 +9,8 @@
 
 ## Installation
 
+### I recommend using prebuilt image that is available on [Docker Hub](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver-arm64) as building it yourself does take really long time (more than half an hour). The instrucions on how to set it up using the prebuilt image are available there. If you still want to build the image yourself, the instructions are below.
+
 #### 1. Install `qemu-user`, `qemu-user-static`, `qemu` and `binfmt-support`
 
    `sudo apt update && sudo apt install qemu-user qemu-user-static qemu binfmt-support`
