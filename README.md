@@ -8,15 +8,18 @@
 ### To see how I did it, look [at this comment](https://github.com/ONLYOFFICE/DocumentServer/issues/152#issuecomment-1061902836) - I used this method and put it in `Dockerfile` so you don't have to mess aroud with your system in any weird ways (like in the mentioned comment)
 
 ## Installation
-#### 1. Clone the repository (for example to your home directory `cd /home/$USER/`) 
+#### 1. Install `qemu`, `qemu-user`, `qemu-user-static` and `binfmt-support` (RPiOS packages)
+    `sudo apt install qemu-user qemu-user-static qemu binfmt-support`
+
+#### 2. Clone the repository (for example to your home directory `cd /home/$USER/`) 
 
    `git clone https://github.com/jiriks74/Docker-DocumentServer-Arm64.git && cd Docker-DocumentServer-Arm64`
 
-#### 2. Build the docker image 
+#### 3. Build the docker image 
    `docker-compose build` 
    - This will take a long time. The things that takte the longes are `dpkg-deb: building package 'onlyoffice-documentserver' in 'onlyoffice-documentserver-modified.deb'` and `Generating presentation themes...` - Both of them take like 20 minutes, it's not stuck, it's just slow (SSD will probably help, I'm running only on HDD)
 
-#### 3. Create and start the container
+#### 4. Create and start the container
    `docker-compose up -d` 
    - This will start the server. It is set to be automatically started/restarted so as long you have docker running on startup this will start automatically
 
