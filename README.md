@@ -37,7 +37,7 @@
 
 #### 4. Rebuild the image without cache
 
-   `docker-compose build --no-cache`
+   `docker-compose build`
    
 #### 3. Create and start the new container
 
