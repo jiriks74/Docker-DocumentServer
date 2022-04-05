@@ -8,14 +8,97 @@
 [![GitHub Stars](https://img.shields.io/github/stars/jiriks74/Docker-DocumentServer-Arm64.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/jiriks74/Docker-DocumentServer-Arm64)
 
 
-### This runs a modified version of the official deb package with the help of `qemu` and `binfmt`
-### It's also based on the official `Dockerfile` and `docker-compose.yml` files with all the needed files as well
+#### This runs a modified version of the official deb package with the help of `qemu` and `binfmt`
+#### It's also based on the official `Dockerfile` and `docker-compose.yml` files with all the needed files as well
 
-### To see how I did it, look [at this comment](https://github.com/ONLYOFFICE/DocumentServer/issues/152#issuecomment-1061902836) - I used this method and put it in `Dockerfile` so you don't have to mess aroud with your system in any weird ways (like in the mentioned comment)
+#### To see how I did it, look [at this comment](https://github.com/ONLYOFFICE/DocumentServer/issues/152#issuecomment-1061902836) - I used this method and put it in `Dockerfile` so you don't have to mess aroud with your system in any weird ways (like in the mentioned comment)
 
-## Installation
+## Requirements
+- You have to have `qemu`, `qemu-user`, `qemu-user-static` and `binftm-support` installed on your `arm64` host.
+    - On Raspberry Pi OS you can do `sudo apt install qemu qemu-user qemu-user-static binfmt-support`
 
-### I recommend using prebuilt image that is available on [Docker Hub](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver-arm64) as building it yourself does take really long time (more than half an hour). The instrucions on how to set it up using the prebuilt image are available there. If you still want to build the image yourself, the instructions are below.
+## Usage
+### docker-compose with prebuilt image (recommended)
+```docker-compose
+version: '2'
+services:
+  onlyoffice-documentserver:
+    image: jiriks74/onlyoffice-documentserver-arm64:latest
+    container_name: onlyoffice-documentserver
+    depends_on:
+      - onlyoffice-postgresql
+      - onlyoffice-rabbitmq
+    environment:
+      - DB_TYPE=postgres
+      - DB_HOST=onlyoffice-postgresql
+      - DB_PORT=5432
+      - DB_NAME=onlyoffice
+      - DB_USER=onlyoffice
+      - AMQP_URI=amqp://guest:guest@onlyoffice-rabbitmq
+      # Uncomment strings below to enable the JSON Web Token validation.
+      #- JWT_ENABLED=true
+      #- JWT_SECRET=your_secret_key
+      #- JWT_HEADER=AuthorizationJwt
+      #- JWT_IN_BODY=true
+    ports:
+      - '88:80'
+      - '443:443'
+    stdin_open: true
+    restart: always
+    stop_grace_period: 120s
+    volumes:
+       - /var/www/onlyoffice/Data
+       - /var/log/onlyoffice
+       - /var/lib/onlyoffice/documentserver/App_Data/cache/files
+       - /var/www/onlyoffice/documentserver-example/public/files
+       - /usr/share/fonts
+       
+  onlyoffice-rabbitmq:
+    container_name: onlyoffice-rabbitmq
+    image: rabbitmq
+    restart: always
+    expose:
+      - '5672'
+
+  onlyoffice-postgresql:
+    container_name: onlyoffice-postgresql
+    image: postgres:9.5
+    environment:
+      - POSTGRES_DB=onlyoffice
+      - POSTGRES_USER=onlyoffice
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    restart: always
+    expose:
+      - '5432'
+    volumes:
+      - postgresql_data:/var/lib/postgresql
+
+volumes:
+  postgresql_data:
+```
+
+### Setup `Secret key`with Nextcloud
+1. Uncomment four lines starting with `JWT` in `docker-compose`
+2. Set your secret on line `JWT_SECRET=yourSecret`
+3. Open Nexcloud's `config.php` (by defauld `/var/www/nextcloud/config/config.php`)
+4. Add this to the 2nd last line (before the line with `);`) and paste in your secret (3rd last line)
+```php
+  'onlyoffice' =>
+    array (
+      "jwt_secret" => "yourSecret",
+      "jwt_header" => "AuthorizationJwt"
+  )
+```
+5. Go to your Nextcloud settings, navigate to Onlyoffice settings
+6. Add your server Address and Secret key
+7. Save
+
+#### Version tags
+- `latest` - the latest version of the Documentserver
+- Version tags (eg. `7.0.1-37`) - these tags are equal to the Documentserver version of the `onlyoffice-documentserver` debian package used in the image
+
+## Building the image yourself
+- [Checkout README.md on my GitHub repository](https://github.com/jiriks74/Docker-DocumentServer-Arm64)
 
 #### 1. Install `qemu-user`, `qemu-user-static`, `qemu` and `binfmt-support`
 
@@ -33,7 +116,7 @@
    `docker-compose up -d` 
    - This will start the server. It is set to be automatically started/restarted so as long you have docker running on startup this will start automatically
 
-## Updating
+## Updating the image yourself
 #### 1. Stop and delete the old container
 
    `docker-compose down`
@@ -51,25 +134,9 @@
 
    `docker-compose up -d`
 
-## Setup `Secret key`with Nextcloud
-1. Uncomment four lines starting with `JWT` in `docker-compose`
-2. Set your secret on line `JWT_SECRET=yourSecret`
-3. Open Nexcloud's `config.php` (by defauld `/var/www/nextcloud/config/config.php`)
-4. Add this to the 2nd last line (before the line with `);`) and paste in your secret (3rd last line)
-```php
-  'onlyoffice' =>
-    array (
-      "jwt_secret" => "yourSecret",
-      "jwt_header" => "AuthorizationJwt"
-  )
-```
-5. Go to your Nextcloud settings, navigate to Onlyoffice settings
-6. Add your server Address and Secret key
-7. Save
-
 ---
 
-## The rest of this file is the official `README.md`. I will not change anything in it, it may not work. If you care about something, make a pull request and we'll figure it out.
+## The rest of this file is the official [`README.md` from OnlyOffice-Documentserver repository](https://github.com/ONLYOFFICE/Docker-DocumentServer). I will not change anything in it, it may not work, but considering the changes I made, it should be fully compatible (beware that you must change the `docker-compose.yml` from building the image locally to using this repository). If you want to change something, make a issue on my repository and we'll figure it out.
 
 <details>
 	
