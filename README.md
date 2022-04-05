@@ -2,6 +2,12 @@
 
 ## Onlyoffice-Documentserver with `arm64` support
 
+[![Docker Pulls](https://img.shields.io/docker/pulls/jiriks74/onlyoffice-documentserver-arm64.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver-arm64)
+[![Docker Stars](https://img.shields.io/docker/stars/jiriks74/onlyoffice-documentserver-arm64.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=stars&logo=docker)](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver-arm64)
+
+[![GitHub Stars](https://img.shields.io/github/stars/jiriks74/Docker-DocumentServer-Arm64.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/jiriks74/Docker-DocumentServer-Arm64)
+
+
 ### This runs a modified version of the official deb package with the help of `qemu` and `binfmt`
 ### It's also based on the official `Dockerfile` and `docker-compose.yml` files with all the needed files as well
 
