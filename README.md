@@ -4,9 +4,10 @@
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/jiriks74/onlyoffice-documentserver-arm64.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver-arm64)
 [![Docker Stars](https://img.shields.io/docker/stars/jiriks74/onlyoffice-documentserver-arm64.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=stars&logo=docker)](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver-arm64)
+[![Docker Size](https://img.shields.io/docker/image-size/jiriks74/onlyoffice-documentserver-arm64/latest.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=Size&logo=docker)](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver-arm64)
 
 [![GitHub Stars](https://img.shields.io/github/stars/jiriks74/Docker-DocumentServer-Arm64.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/jiriks74/Docker-DocumentServer-Arm64)
-
+[![GitHub Forks](https://img.shields.io/github/forks/jiriks74/Docker-DocumentServer-Arm64?color=94398d&label=Forks&logo=github&logoColor=ffffff&style=for-the-badge)](https://github.com/jiriks74/Docker-DocumentServer-Arm64)
 
 #### This runs a modified version of the official deb package with the help of `qemu` and `binfmt`
 #### It's also based on the official `Dockerfile` and `docker-compose.yml` files with all the needed files as well
@@ -97,8 +98,7 @@ volumes:
 - `latest` - the latest version of the Documentserver
 - Version tags (eg. `7.0.1-37`) - these tags are equal to the Documentserver version of the `onlyoffice-documentserver` debian package used in the image
 
-## Building the image yourself
-- [Checkout README.md on my GitHub repository](https://github.com/jiriks74/Docker-DocumentServer-Arm64)
+## Building the image yourself (not recommended - takes a lot of time)
 
 #### 1. Install `qemu-user`, `qemu-user-static`, `qemu` and `binfmt-support`
 
