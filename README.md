@@ -1,11 +1,11 @@
 # NOW WORKING FOR BOTH `amd64` and `arm64` natively!
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/jiriks74/onlyoffice-documentserver-arm64.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver-arm64)
-[![Docker Stars](https://img.shields.io/docker/stars/jiriks74/onlyoffice-documentserver-arm64.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=stars&logo=docker)](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver-arm64)
-[![Docker Size](https://img.shields.io/docker/image-size/jiriks74/onlyoffice-documentserver-arm64/latest.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=Size&logo=docker)](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver-arm64)
+[![Docker Pulls](https://img.shields.io/docker/pulls/jiriks74/onlyoffice-documentserver.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver)
+[![Docker Stars](https://img.shields.io/docker/stars/jiriks74/onlyoffice-documentserver.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=stars&logo=docker)](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver)
+[![Docker Size](https://img.shields.io/docker/image-size/jiriks74/onlyoffice-documentserver/latest.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=Size&logo=docker)](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver)
 
-[![GitHub Stars](https://img.shields.io/github/stars/jiriks74/Docker-DocumentServer-Arm64.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/jiriks74/Docker-DocumentServer-Arm64)
-[![GitHub Forks](https://img.shields.io/github/forks/jiriks74/Docker-DocumentServer-Arm64?color=94398d&label=Forks&logo=github&logoColor=ffffff&style=for-the-badge)](https://github.com/jiriks74/Docker-DocumentServer-Arm64)
+[![GitHub Stars](https://img.shields.io/github/stars/jiriks74/Docker-DocumentServer.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/jiriks74/Docker-DocumentServer)
+[![GitHub Forks](https://img.shields.io/github/forks/jiriks74/Docker-DocumentServer?color=94398d&label=Forks&logo=github&logoColor=ffffff&style=for-the-badge)](https://github.com/jiriks74/Docker-DocumentServer)
 
 #### This repository is based on the official `Dockerfile` and `docker-compose.yml` files with all the needed files as well
 
@@ -20,7 +20,7 @@
 version: '2'
 services:
   onlyoffice-documentserver:
-    image: jiriks74/onlyoffice-documentserver-arm64:latest-arm64
+    image: jiriks74/onlyoffice-documentserver:latest-arm64
     container_name: onlyoffice-documentserver
     depends_on:
       - onlyoffice-postgresql
@@ -84,7 +84,7 @@ volumes:
 version: '2'
 services:
   onlyoffice-documentserver:
-    image: jiriks74/onlyoffice-documentserver-arm64:latest
+    image: jiriks74/onlyoffice-documentserver:latest
     container_name: onlyoffice-documentserver
     depends_on:
       - onlyoffice-postgresql
