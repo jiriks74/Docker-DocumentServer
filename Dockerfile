@@ -81,7 +81,7 @@ ENV COMPANY_NAME=$COMPANY_NAME \
     PRODUCT_NAME=$PRODUCT_NAME
 
 RUN RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
-    wget -q -P /tmp "http://download.onlyoffice.com/install/documentserver/linux/${COMPANY_NAME}-${PRODUCT_NAME}_${arch}.deb"
+    wget -q -P /tmp "http://download.onlyoffice.com/install/documentserver/linux/${COMPANY_NAME}-${PRODUCT_NAME}_${arch}.deb" && \
     apt-get -y update && \
     service postgresql start && \
     apt-get -yq install /tmp/$(basename "$PACKAGE_URL") && \
