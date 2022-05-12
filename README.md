@@ -2,43 +2,83 @@
 
 ## Onlyoffice-Documentserver with `arm64` support
 
-### This runs a modified version of the official deb package with the help of `qemu` and `binfmt`
-### It's also based on the official `Dockerfile` and `docker-compose.yml` files with all the needed files as well
+[![Docker Pulls](https://img.shields.io/docker/pulls/jiriks74/onlyoffice-documentserver-arm64.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver-arm64)
+[![Docker Stars](https://img.shields.io/docker/stars/jiriks74/onlyoffice-documentserver-arm64.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=stars&logo=docker)](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver-arm64)
+[![Docker Size](https://img.shields.io/docker/image-size/jiriks74/onlyoffice-documentserver-arm64/latest.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=Size&logo=docker)](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver-arm64)
 
-### To see how I did it, look [at this comment](https://github.com/ONLYOFFICE/DocumentServer/issues/152#issuecomment-1061902836) - I used this method and put it in `Dockerfile` so you don't have to mess aroud with your system in any weird ways (like in the mentioned comment)
+[![GitHub Stars](https://img.shields.io/github/stars/jiriks74/Docker-DocumentServer-Arm64.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/jiriks74/Docker-DocumentServer-Arm64)
+[![GitHub Forks](https://img.shields.io/github/forks/jiriks74/Docker-DocumentServer-Arm64?color=94398d&label=Forks&logo=github&logoColor=ffffff&style=for-the-badge)](https://github.com/jiriks74/Docker-DocumentServer-Arm64)
 
-## Installation
-#### 1. Clone the repository (for example to your home directory `cd /home/$USER/`) 
+#### This runs a modified version of the official deb package with the help of `qemu` and `binfmt`
+#### It's also based on the official `Dockerfile` and `docker-compose.yml` files with all the needed files as well
 
-   `git clone https://github.com/jiriks74/Docker-DocumentServer-Arm64.git && cd Docker-DocumentServer-Arm64`
+#### To see how I did it, look [at this comment](https://github.com/ONLYOFFICE/DocumentServer/issues/152#issuecomment-1061902836) - I used this method and put it in `Dockerfile` so you don't have to mess aroud with your system in any weird ways (like in the mentioned comment)
 
-#### 2. Build the docker image 
-   `docker-compose build` 
-   - This will take a long time. The things that takte the longes are `dpkg-deb: building package 'onlyoffice-documentserver' in 'onlyoffice-documentserver-modified.deb'` and `Generating presentation themes...` - Both of them take like 20 minutes, it's not stuck, it's just slow (SSD will probably help, I'm running only on HDD)
+## Requirements
+- You have to have `qemu`, `qemu-user`, `qemu-user-static` and `binftm-support` installed on your `arm64` host.
+    - On Raspberry Pi OS you can do `sudo apt install qemu qemu-user qemu-user-static binfmt-support`
 
-#### 3. Create and start the container
-   `docker-compose up -d` 
-   - This will start the server. It is set to be automatically started/restarted so as long you have docker running on startup this will start automatically
+## Usage
+### docker-compose with prebuilt image (recommended)
+```docker-compose
+version: '2'
+services:
+  onlyoffice-documentserver:
+    image: jiriks74/onlyoffice-documentserver-arm64:latest
+    container_name: onlyoffice-documentserver
+    depends_on:
+      - onlyoffice-postgresql
+      - onlyoffice-rabbitmq
+    environment:
+      - DB_TYPE=postgres
+      - DB_HOST=onlyoffice-postgresql
+      - DB_PORT=5432
+      - DB_NAME=onlyoffice
+      - DB_USER=onlyoffice
+      - AMQP_URI=amqp://guest:guest@onlyoffice-rabbitmq
+      # Uncomment strings below to enable the JSON Web Token validation.
+      #- JWT_ENABLED=true
+      #- JWT_SECRET=your_secret_key
+      #- JWT_HEADER=AuthorizationJwt
+      #- JWT_IN_BODY=true
+    ports:
+      - '88:80'
+      - '443:443'
+    stdin_open: true
+    restart: always
+    stop_grace_period: 120s
+    volumes:
+       - /var/www/onlyoffice/Data
+       - /var/log/onlyoffice
+       - /var/lib/onlyoffice/documentserver/App_Data/cache/files
+       - /var/www/onlyoffice/documentserver-example/public/files
+       - /usr/share/fonts
+       
+  onlyoffice-rabbitmq:
+    container_name: onlyoffice-rabbitmq
+    image: rabbitmq
+    restart: always
+    expose:
+      - '5672'
 
-## Updating
-#### 1. Stop and delete the old container
+  onlyoffice-postgresql:
+    container_name: onlyoffice-postgresql
+    image: postgres:9.5
+    environment:
+      - POSTGRES_DB=onlyoffice
+      - POSTGRES_USER=onlyoffice
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    restart: always
+    expose:
+      - '5432'
+    volumes:
+      - postgresql_data:/var/lib/postgresql
 
-   `docker-compose down`
-   
-#### 2. (optional) Clear the docker cache 
-####    - ! This will remove all unused cache images ! (good for saving space, bad if you develop with and need cache, but you understand it at that point)
+volumes:
+  postgresql_data:
+```
 
-   `docker rmi $(docker images -f "dangling=true" -q)`
-
-#### 4. Rebuild the image without cache
-
-   `docker-compose build --no-cache`
-   
-#### 3. Create and start the new container
-
-   `docker-compose up -d`
-
-## Setup `Secret key`with Nextcloud
+### Setup `Secret key`with Nextcloud
 1. Uncomment four lines starting with `JWT` in `docker-compose`
 2. Set your secret on line `JWT_SECRET=yourSecret`
 3. Open Nexcloud's `config.php` (by defauld `/var/www/nextcloud/config/config.php`)
@@ -54,9 +94,60 @@
 6. Add your server Address and Secret key
 7. Save
 
+#### Version tags
+- `latest` - the latest version of the Documentserver
+- Version tags (eg. `7.0.1-37`) - these tags are equal to the Documentserver version of the `onlyoffice-documentserver` debian package used in the image
+
+## Building the image yourself (not recommended - takes a lot of time)
+
+#### 1. Install `qemu-user`, `qemu-user-static`, `qemu` and `binfmt-support`
+
+   `sudo apt update && sudo apt install qemu-user qemu-user-static qemu binfmt-support`
+
+#### 2. Clone the repository (for example to your home directory `cd /home/$USER/`) 
+
+   `git clone https://github.com/jiriks74/Docker-DocumentServer-Arm64.git && cd Docker-DocumentServer-Arm64`
+
+#### 3. Build the docker image 
+   `docker-compose build` 
+   - This will take a long time. The things that takte the longes are `dpkg-deb: building package 'onlyoffice-documentserver' in 'onlyoffice-documentserver-modified.deb'` and `Generating presentation themes...` - Both of them take like 20 minutes, it's not stuck, it's just slow (SSD will probably help, I'm running only on HDD)
+
+#### 4. Create and start the container
+   `docker-compose up -d` 
+   - This will start the server. It is set to be automatically started/restarted so as long you have docker running on startup this will start automatically
+
+## Updating the image yourself
+#### 1. Stop and delete the old container
+
+   `docker-compose down`
+   
+#### 2. (optional) Clear the docker cache 
+####    - ! This will remove all unused cache images ! (good for saving space, bad if you develop with and need cache, but you understand it at that point)
+
+   `docker rmi $(docker images -f "dangling=true" -q)`
+
+#### 4. Rebuild the image without cache
+
+   `docker-compose build`
+   
+#### 3. Create and start the new container
+
+   `docker-compose up -d`
+   
+## FAQ
+
+### The container is up, but OnlyOffice isn't reachable
+- (Due to the slow storage of Raspberry Pi and simmilar devices - external SSD may help here)
+- The container takes a bit longer to start up. Just wait, it can take up to 5 minutes for OnlyOffice DocumentServer to load.
+
+### `docker-copose up` results in http timeout
+- (Due to the slow storage of the Raspberry Pi and simmilar external SSD may help here again)
+- Run this to set larger timeout:
+  - `export COMPOSE_HTTP_TIMEOUT=360`
+
 ---
 
-## The rest of this file is the official `README.md`. I will not change anything in it, it may not work. If you care about something, make a pull request and we'll figure it out.
+## The rest of this file is the official [`README.md` from OnlyOffice-Documentserver repository](https://github.com/ONLYOFFICE/Docker-DocumentServer). I will not change anything in it, it may not work, but considering the changes I made, it should be fully compatible (beware that you must change the `docker-compose.yml` from building the image locally to using this repository). If you want to change something, make a issue on my repository and we'll figure it out.
 
 <details>
 	
