@@ -1,4 +1,4 @@
-FROM debian:latest
+FROM debian:bullseye
 LABEL maintainer Ascensio System SIA <support@onlyoffice.com>
 
 RUN echo "deb http://deb.debian.org/debian bullseye main contrib non-free\ndeb http://deb.debian.org/debian-security/ bullseye-security main contrib non-free\ndeb http://deb.debian.org/debian bullseye-updates main contrib non-free\ndeb http://deb.debian.org/debian bullseye-backports main" > /etc/apt/sources.list
