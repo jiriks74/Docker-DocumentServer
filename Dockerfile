@@ -1,4 +1,5 @@
-FROM debian:bullseye
+ARG ARCH=
+FROM ${ARCH}debian:bullseye
 LABEL maintainer Ascensio System SIA <support@onlyoffice.com>
 
 RUN echo "deb http://deb.debian.org/debian bullseye main contrib non-free\ndeb http://deb.debian.org/debian-security/ bullseye-security main contrib non-free\ndeb http://deb.debian.org/debian bullseye-updates main contrib non-free\ndeb http://deb.debian.org/debian bullseye-backports main" > /etc/apt/sources.list
@@ -75,7 +76,6 @@ EXPOSE 80 443
 
 ARG COMPANY_NAME=onlyoffice
 ARG PRODUCT_NAME=documentserver
-ARG PACKAGE_URL="http://download.onlyoffice.com/install/documentserver/linux/${COMPANY_NAME}-${PRODUCT_NAME}_arm64.deb"
 
 ENV COMPANY_NAME=$COMPANY_NAME \
     PRODUCT_NAME=$PRODUCT_NAME
@@ -84,11 +84,11 @@ RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
     wget -q -P /tmp "http://download.onlyoffice.com/install/documentserver/linux/${COMPANY_NAME}-${PRODUCT_NAME}_${arch}.deb" && \
     apt-get -y update && \
     service postgresql start && \
-    apt-get -yq install /tmp/$(basename "$PACKAGE_URL") && \
+    apt-get -yq install /tmp/$(basename "${COMPANY_NAME}-${PRODUCT_NAME}_${arch}.deb") && \
     service postgresql stop && \
     service supervisor stop && \
     chmod 755 /app/ds/*.sh && \
-    rm -f /tmp/$(basename "$PACKAGE_URL") && \
+    rm -f /tmp/"${COMPANY_NAME}-${PRODUCT_NAME}_${arch}.deb" && \
     rm -rf /var/log/$COMPANY_NAME && \
     rm -rf /var/lib/apt/lists/*
 
