@@ -1,4 +1,4 @@
-# NOW WORKING FOR BOTH `amd64` and `arm64` natively!
+# NOW WORKING FOR `amd64`, `arm64` and `i386` natively!
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/jiriks74/onlyoffice-documentserver.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver)
 [![Docker Stars](https://img.shields.io/docker/stars/jiriks74/onlyoffice-documentserver.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=stars&logo=docker)](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver)
@@ -12,72 +12,8 @@
 #### To see how I did it, look [at this comment](https://github.com/ONLYOFFICE/DocumentServer/issues/152#issuecomment-1061902836) - I used this method and put it in `Dockerfile` so you don't have to mess aroud with your system in any weird ways (like in the mentioned comment)
 
 ## Usage
-### `arm64`:
 #### docker-compose with prebuilt image (recommended)
-<details>
-	
-```docker-compose
-version: '2'
-services:
-  onlyoffice-documentserver:
-    image: jiriks74/onlyoffice-documentserver:latest-arm64
-    container_name: onlyoffice-documentserver
-    depends_on:
-      - onlyoffice-postgresql
-      - onlyoffice-rabbitmq
-    environment:
-      - DB_TYPE=postgres
-      - DB_HOST=onlyoffice-postgresql
-      - DB_PORT=5432
-      - DB_NAME=onlyoffice
-      - DB_USER=onlyoffice
-      - AMQP_URI=amqp://guest:guest@onlyoffice-rabbitmq
-      # Uncomment strings below to enable the JSON Web Token validation.
-      #- JWT_ENABLED=true
-      #- JWT_SECRET=your_secret_key
-      #- JWT_HEADER=AuthorizationJwt
-      #- JWT_IN_BODY=true
-    ports:
-      - '88:80'
-      - '443:443'
-    stdin_open: true
-    restart: always
-    stop_grace_period: 120s
-    volumes:
-       - /var/www/onlyoffice/Data
-       - /var/log/onlyoffice
-       - /var/lib/onlyoffice/documentserver/App_Data/cache/files
-       - /var/www/onlyoffice/documentserver-example/public/files
-       - /usr/share/fonts
-       
-  onlyoffice-rabbitmq:
-    container_name: onlyoffice-rabbitmq
-    image: rabbitmq
-    restart: always
-    expose:
-      - '5672'
-
-  onlyoffice-postgresql:
-    container_name: onlyoffice-postgresql
-    image: postgres:9.5
-    environment:
-      - POSTGRES_DB=onlyoffice
-      - POSTGRES_USER=onlyoffice
-      - POSTGRES_HOST_AUTH_METHOD=trust
-    restart: always
-    expose:
-      - '5432'
-    volumes:
-      - postgresql_data:/var/lib/postgresql
-
-volumes:
-  postgresql_data:
-```
-	
-</details>
-
-### `amd64`:
-#### docker-compose with prebuilt image (recommended)
+- Docker will pull the correct architecture automatically
 <details>
 	
 ```docker-compose
@@ -156,21 +92,22 @@ volumes:
 6. Add your server Address and Secret key
 7. Save
 
-#### Version tags
+#### Tags used on DockerHub
 - `latest` - the latest version of the Documentserver -  `amd64` version
-- `latest-arm64` - the latest version of the Documentserver -  `arm64` version
 - Version tags (eg. `7.0.1-37`) - these tags are equal to the Documentserver version of the `onlyoffice-documentserver` debian package used in the image
-  - Add `-arm64` behind version tags to get the `arm64` version
 
-## Building the image yourself (not recommended - takes a lot of time)
+## Building the image yourself (not recommended - may take a lot of time)
 
 #### 1. Clone the repository (for example to your home directory `cd /home/$USER/`) 
 
-   `git clone https://github.com/jiriks74/Docker-DocumentServer-Arm64.git && cd Docker-DocumentServer-Arm64`
+   `git clone https://github.com/jiriks74/Docker-DocumentServer.git && cd Docker-DocumentServer`
 
 #### 2. Build the docker image 
+##### Building only for the architecture you are building the image on (when building on Raspberry Pi result will be `arm64`, when on pc result will be `amd64`) 
    `docker-compose build` 
-   - This may take some time
+   
+##### Building for all supported architectures (you have to have your environment setup for emulation of arm64 with `qemu`)
+   `docker buildx build --platform linux/arm64,linux/amd64,linux/386 .
 
 #### 3. Create and start the container
    `docker-compose up -d` 
@@ -187,8 +124,11 @@ volumes:
    `docker rmi $(docker images -f "dangling=true" -q)`
 
 #### 4. Rebuild the image without cache
-
-   `docker-compose build`
+##### Building only for the architecture you are building the image on (when building on Raspberry Pi result will be `arm64`, when on pc result will be `amd64`) 
+   `docker-compose build` 
+   
+##### Building for all supported architectures (you have to have your environment setup for emulation of arm64 with `qemu`)
+   `docker buildx build --platform linux/arm64,linux/amd64,linux/386 .
    
 #### 3. Create and start the new container
 
