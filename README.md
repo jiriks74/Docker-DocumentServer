@@ -170,7 +170,7 @@ volumes:
 
 #### 2. Build the docker image 
    `docker-compose build` 
-   - This will take a long time. The things that takte the longes are `dpkg-deb: building package 'onlyoffice-documentserver' in 'onlyoffice-documentserver-modified.deb'` and `Generating presentation themes...` - Both of them take like 20 minutes, it's not stuck, it's just slow (SSD will probably help, I'm running only on HDD)
+   - This may take some time
 
 #### 3. Create and start the container
    `docker-compose up -d` 
@@ -193,17 +193,6 @@ volumes:
 #### 3. Create and start the new container
 
    `docker-compose up -d`
-   
-## FAQ
-
-### The container is up, but OnlyOffice isn't reachable
-- (Due to the slow storage of Raspberry Pi and simmilar devices - external SSD may help here)
-- The container takes a bit longer to start up. Just wait, it can take up to 5 minutes for OnlyOffice DocumentServer to load.
-
-### `docker-copose up` results in http timeout
-- (Due to the slow storage of the Raspberry Pi and simmilar external SSD may help here again)
-- Run this to set larger timeout:
-  - `export COMPOSE_HTTP_TIMEOUT=360`
 
 ---
 
