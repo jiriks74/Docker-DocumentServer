@@ -1,6 +1,6 @@
 ARG ARCH=
 FROM ${ARCH}debian:bullseye
-LABEL maintainer Ascensio System SIA <support@onlyoffice.com>
+LABEL maintainer jiriks74 <jiri.stefka.js@gmail.com>
 
 RUN echo "deb http://deb.debian.org/debian bullseye main contrib non-free\ndeb http://deb.debian.org/debian-security/ bullseye-security main contrib non-free\ndeb http://deb.debian.org/debian bullseye-updates main contrib non-free\ndeb http://deb.debian.org/debian bullseye-backports main" > /etc/apt/sources.list
 
