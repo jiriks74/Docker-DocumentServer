@@ -95,6 +95,10 @@ volumes:
 ### Setup lager file limits
 - Uncomment the `- LARGER_FILE_LIMITS=true` line in `docker-compose.yml`
 
+### Generate custom themes
+1. Uncomment the `docker exec -it onlyoffice-documentserver /usr/bin/documentserver-generate-allfonts.sh` line
+2. Run `docker exec -it <container-name> /usr/bin/documentserver-generate-allfonts.sh`
+
 #### Tags used on DockerHub
 - `latest` - the latest version of the Documentserver -  `amd64` version
 - Version tags (eg. `7.0.1-37`) - these tags are equal to the Documentserver version of the `onlyoffice-documentserver` debian package used in the image
