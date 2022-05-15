@@ -9,8 +9,6 @@
 
 #### This repository is based on the official `Dockerfile` and `docker-compose.yml` files with all the needed files as well
 
-#### To see how I did it, look [at this comment](https://github.com/ONLYOFFICE/DocumentServer/issues/152#issuecomment-1061902836) - I used this method and put it in `Dockerfile` so you don't have to mess aroud with your system in any weird ways (like in the mentioned comment)
-
 ## Usage
 #### docker-compose with prebuilt image (recommended)
 - Docker will pull the correct architecture automatically
@@ -102,7 +100,10 @@ volumes:
 
 ### Generate custom themes
 1. Uncomment the `- ./slideThemes:/var/www/onlyoffice/documentserver/sdkjs/slide/themes/src` line
-2. Run `docker exec -it <container-name> /usr/bin/documentserver-generate-allfonts.sh`
+2. Put your themes into the `slideThemes` directory
+3. Run `docker exec -it <container-name> /usr/bin/documentserver-generate-allfonts.sh` 
+	- (This will take some time. I have totally 35 themes and it took about 30 minutes to generate them on a Raspberry Pi 4 4GB)
+4. If you want to add more themes later, repeat step 2 and 3.
 
 #### Tags used on DockerHub
 - `latest` - the latest version of the Documentserver -  `amd64` version
