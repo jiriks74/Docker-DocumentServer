@@ -92,6 +92,10 @@ volumes:
 6. Add your server Address and Secret key
 7. Save
 
+### Setup lager file limits
+1. Run `sh largerFiles.sh`
+2. Input your container name, if you didn't change it, just press enter
+
 #### Tags used on DockerHub
 - `latest` - the latest version of the Documentserver -  `amd64` version
 - Version tags (eg. `7.0.1-37`) - these tags are equal to the Documentserver version of the `onlyoffice-documentserver` debian package used in the image
