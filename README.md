@@ -93,8 +93,7 @@ volumes:
 7. Save
 
 ### Setup lager file limits
-1. Run `sh largerFiles.sh`
-2. Input your container name, if you didn't change it, just press enter
+- Uncomment the `- LARGER_FILE_LIMITS=true` line in `docker-compose.yml`
 
 #### Tags used on DockerHub
 - `latest` - the latest version of the Documentserver -  `amd64` version

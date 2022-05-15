@@ -19,6 +19,8 @@ services:
       #- JWT_SECRET=secret
       #- JWT_HEADER=AuthorizationJwt
       #- JWT_IN_BODY=true
+      # Uncomment the line below to set larger file limits (about 1GB)
+      #- LARGER_FILE_LIMITS=true
     ports:
       - '80:80'
       - '443:443'

@@ -66,6 +66,29 @@ NGINX_CONFIG_PATH="/etc/nginx/nginx.conf"
 NGINX_WORKER_PROCESSES=${NGINX_WORKER_PROCESSES:-1}
 NGINX_WORKER_CONNECTIONS=${NGINX_WORKER_CONNECTIONS:-$(ulimit -n)}
 
+# Chech if lager file limits should be set
+if [ "$LARGER_FILE_LIMITS" = "true" ]; then
+    if [ -e /app/ds/file_limits_set ]; then
+	    echo ""
+    else
+	    touch /app/ds/file_limits_set
+
+	    /bin/sh -c 'sed -i -e 's/104857600/10485760000/g' /etc/onlyoffice/documentserver-example/production-linux.json'
+	    
+	    /bin/sh -c 'sed -i '9iclient_max_body_size 1000M;' /etc/onlyoffice/documentserver-example/nginx/includes/ds-example.conf'
+	    /bin/sh -c 'sed -i '16iclient_max_body_size 1000M;' /etc/nginx/nginx.conf'
+	    
+	    /bin/sh -c 'sed -i -e 's/104857600/10485760000/g' /etc/onlyoffice/documentserver/default.json'
+	    /bin/sh -c 'sed -i -e 's/50MB/5000MB/g' /etc/onlyoffice/documentserver/default.json'
+	    /bin/sh -c 'sed -i -e 's/300MB/3000MB/g' /etc/onlyoffice/documentserver/default.json'
+	    
+	    /bin/sh -c 'sed -i 's/^client_max_body_size 100m;$/client_max_body_size 1000m;/' /etc/onlyoffice/documentserver/nginx/includes/ds-common.conf'
+	    
+	    /bin/sh -c 'service nginx restart'
+	    /bin/sh -c 'supervisorctl restart all'
+    fi
+fi
+
 JWT_ENABLED=${JWT_ENABLED:-false}
 
 # validate user's vars before usinig in json
