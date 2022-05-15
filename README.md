@@ -34,16 +34,21 @@ services:
       - AMQP_URI=amqp://guest:guest@onlyoffice-rabbitmq
       # Uncomment strings below to enable the JSON Web Token validation.
       #- JWT_ENABLED=true
-      #- JWT_SECRET=your_secret_key
+      #- JWT_SECRET=secret
       #- JWT_HEADER=AuthorizationJwt
       #- JWT_IN_BODY=true
+      # Uncomment the line below to set larger file limits (about 1GB)
+      #- LARGER_FILE_LIMITS=true
     ports:
-      - '88:80'
+      - '80:80'
       - '443:443'
     stdin_open: true
     restart: always
     stop_grace_period: 120s
     volumes:
+       # Uncomment the line below to get access to the slide themes directory.
+       # To use the themes, copy them to the slideThemes directory and run `docker exec -it <container-name> /usr/bin/documentserver-generate-allfonts.sh`
+       #- ./slideThemes:/var/www/onlyoffice/documentserver/sdkjs/slide/themes/src
        - /var/www/onlyoffice/Data
        - /var/log/onlyoffice
        - /var/lib/onlyoffice/documentserver/App_Data/cache/files
