@@ -9,27 +9,6 @@ trap clean_exit SIGTERM
 # Define '**' behavior explicitly
 shopt -s globstar
 
-# Check if lager file limits should be set
-if [ "$LARGER_FILE_LIMITS" = "true" ]; then
-    if [ -e /app/ds/file_limits_set ]; then
-	    echo ""
-    else
-	    touch /app/ds/file_limits_set
-
-	    sed -i -e 's/104857600/10485760000/g' /etc/onlyoffice/documentserver-example/production-linux.json
-	    
-	    sed -i '9iclient_max_body_size 1000M;' /etc/onlyoffice/documentserver-example/nginx/includes/ds-example.conf
-	    sed -i '16iclient_max_body_size 1000M;' /etc/nginx/nginx.conf
-	    
-	    sed -i -e 's/104857600/10485760000/g' /etc/onlyoffice/documentserver/default.json
-	    sed -i -e 's/50MB/5000MB/g' /etc/onlyoffice/documentserver/default.json
-	    sed -i -e 's/300MB/3000MB/g' /etc/onlyoffice/documentserver/default.json
-	    
-	    sed -i 's/^client_max_body_size 100m;$/client_max_body_size 1000m;/' /etc/onlyoffice/documentserver/nginx/includes/ds-common.conf
-	    
-    fi
-fi
-
 APP_DIR="/var/www/${COMPANY_NAME}/documentserver"
 DATA_DIR="/var/www/${COMPANY_NAME}/Data"
 PRIVATE_DATA_DIR="${DATA_DIR}/.private"
@@ -645,6 +624,30 @@ if [ "${GENERATE_FONTS}" == "true" ]; then
   documentserver-generate-allfonts.sh ${ONLYOFFICE_DATA_CONTAINER}
 fi
 documentserver-static-gzip.sh ${ONLYOFFICE_DATA_CONTAINER}
+
+# Check if lager file limits should be set
+if [ "$LARGER_FILE_LIMITS" = "true" ]; then
+    if [ -e /app/ds/file_limits_set ]; then
+	    echo ""
+    else
+	    touch /app/ds/file_limits_set
+
+	    sed -i -e 's/104857600/10485760000/g' /etc/onlyoffice/documentserver-example/production-linux.json
+	    
+	    sed -i '9iclient_max_body_size 1000M;' /etc/onlyoffice/documentserver-example/nginx/includes/ds-example.conf
+	    sed -i '16iclient_max_body_size 1000M;' /etc/nginx/nginx.conf
+	    
+	    sed -i -e 's/104857600/10485760000/g' /etc/onlyoffice/documentserver/default.json
+	    sed -i -e 's/50MB/5000MB/g' /etc/onlyoffice/documentserver/default.json
+	    sed -i -e 's/300MB/3000MB/g' /etc/onlyoffice/documentserver/default.json
+	    
+	    sed -i 's/^client_max_body_size 100m;$/client_max_body_size 1000m;/' /etc/onlyoffice/documentserver/nginx/includes/ds-common.conf
+
+	    service nginx restart
+	    supervisorctl restart all
+	    
+    fi
+fi
 
 tail -f /var/log/${COMPANY_NAME}/**/*.log &
 wait $!
