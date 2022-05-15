@@ -8,6 +8,8 @@ ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8 DEBIAN_FRONTEND=nonint
 
 ARG ONLYOFFICE_VALUE=onlyoffice
 
+RUN /bin/sh -c "while [ ! nc -z localhost 5432 ]; do sleep 0.1; done"
+
 RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d && \
     apt-get -y update && \
     apt-get -yq install wget apt-transport-https gnupg locales && \
@@ -69,9 +71,6 @@ RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d && \
     service nginx stop && \
     rm -rf /var/lib/apt/lists/*
 
-COPY config /app/ds/setup/config/
-COPY run-document-server.sh /app/ds/run-document-server.sh
-
 EXPOSE 80 443
 
 ARG COMPANY_NAME=onlyoffice
@@ -80,6 +79,8 @@ ARG PRODUCT_NAME=documentserver
 ENV COMPANY_NAME=$COMPANY_NAME \
     PRODUCT_NAME=$PRODUCT_NAME
 
+RUN /bin/sh -c "while [ ! nc -z localhost 5432 ]; do sleep 0.1; done"
+
 RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
     wget -q -P /tmp "http://download.onlyoffice.com/install/documentserver/linux/${COMPANY_NAME}-${PRODUCT_NAME}_${arch}.deb" && \
     apt-get -y update && \
@@ -87,10 +88,15 @@ RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
     apt-get -yq install /tmp/$(basename "${COMPANY_NAME}-${PRODUCT_NAME}_${arch}.deb") && \
     service postgresql stop && \
     service supervisor stop && \
-    chmod 755 /app/ds/*.sh && \
     rm -f /tmp/"${COMPANY_NAME}-${PRODUCT_NAME}_${arch}.deb" && \
     rm -rf /var/log/$COMPANY_NAME && \
     rm -rf /var/lib/apt/lists/*
+
+COPY config /app/ds/setup/config/
+COPY run-document-server.sh /app/ds/run-document-server.sh
+
+
+RUN chmod 755 /app/ds/*.sh 
 
 VOLUME /var/log/$COMPANY_NAME /var/lib/$COMPANY_NAME /var/www/$COMPANY_NAME/Data /var/lib/postgresql /var/lib/rabbitmq /var/lib/redis /usr/share/fonts/truetype/custom
 
