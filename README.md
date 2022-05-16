@@ -12,6 +12,7 @@
 ## Usage
 #### docker-compose with prebuilt image (recommended)
 - Docker will pull the correct architecture automatically
+- Below in `Details` you'll find a `docker-compose.yml` templete. To use it, make a directory where data from the container will be saved, create `docker-compose.yml` file in it and put the template from below in it. Then modify the template to your needs.
 <details>
 	
 ```yml
