@@ -14,7 +14,7 @@
 - Docker will pull the correct architecture automatically
 <details>
 	
-```docker-compose
+```yml
 version: '2'
 services:
   onlyoffice-documentserver:
