@@ -107,7 +107,7 @@ volumes:
 4. If you want to add more themes later, repeat step 2 and 3.
 
 #### Tags used on DockerHub
-- `latest` - the latest version of the Documentserver -  `amd64` version
+- `latest` - the latest version of the Documentserver
 - Version tags (eg. `7.0.1-37`) - these tags are equal to the Documentserver version of the `onlyoffice-documentserver` debian package used in the image
 
 ## Building the image yourself (not recommended - may take a lot of time)
