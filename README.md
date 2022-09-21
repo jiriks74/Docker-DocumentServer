@@ -9,6 +9,15 @@
 
 #### This repository is based on the official `Dockerfile` and `docker-compose.yml` files with all the needed files as well
 
+# Table of contents
+- [Usage](#usage)
+  - [Setting up secret key with nextcloud](#setting-up-secret-key-with-nextcloud)
+  - [Larger file limits](#setting-up-larger-file-limits)
+  - [Generating custom presentation themes](#generating-custom-presentation-themes)
+- [Tags on DockerHub](#tags-used-on-dockerhub)
+- [Building the image from source](#building-the-image-yourself-not-recommended---may-take-a-lot-of-time)
+  - [Updating the image yourself](#updating-the-image-yourself)
+
 ## Usage
 #### docker-compose with prebuilt image (recommended)
 - Docker will pull the correct architecture automatically
@@ -80,7 +89,7 @@ volumes:
 	
 </details>
 
-### Setup `Secret key`with Nextcloud
+### Setting up `Secret key` with Nextcloud
 1. Uncomment four lines starting with `JWT` in `docker-compose`
 2. Set your secret on line `JWT_SECRET=yourSecret`
 3. Open Nexcloud's `config.php` (by default `/var/www/nextcloud/config/config.php`)
@@ -96,17 +105,17 @@ volumes:
 6. Add your server Address and Secret key
 7. Save
 
-### Setup lager file limits
+### Setting up larger file limits
 - Uncomment the `- LARGER_FILE_LIMITS=true` line in `docker-compose.yml`
 
-### Generate custom themes
+### Generating custom presentation themes
 1. Uncomment the `- ./slideThemes:/var/www/onlyoffice/documentserver/sdkjs/slide/themes/src` line in `docker-compose.yml`
 2. Put your themes into the `slideThemes` directory
 3. Run `docker exec -it <container-name> /usr/bin/documentserver-generate-allfonts.sh` 
 	- (This will take some time. I have totally 35 themes and it took about 30 minutes to generate them on a Raspberry Pi 4 4GB on an external HDD - SSD may be faster)
 4. If you want to add more themes later, repeat step 2 and 3.
 
-#### Tags used on DockerHub
+## Tags used on DockerHub
 - `latest` - the latest version of the Documentserver
 - Version tags (eg. `7.0.1-37`) - these tags are equal to the Documentserver version of the `onlyoffice-documentserver` debian package used in the image
 
@@ -127,7 +136,7 @@ volumes:
    `docker-compose up -d` 
    - This will start the server. It is set to be automatically started/restarted so as long you have docker running on startup this will start automatically
 
-## Updating the image yourself
+### Updating the image yourself
 #### 1. Stop and delete the old container
 
    `docker-compose down`
