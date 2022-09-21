@@ -83,7 +83,7 @@ volumes:
 ### Setup `Secret key`with Nextcloud
 1. Uncomment four lines starting with `JWT` in `docker-compose`
 2. Set your secret on line `JWT_SECRET=yourSecret`
-3. Open Nexcloud's `config.php` (by defauld `/var/www/nextcloud/config/config.php`)
+3. Open Nexcloud's `config.php` (by default `/var/www/nextcloud/config/config.php`)
 4. Add this to the 2nd last line (before the line with `);`) and paste in your secret (3rd last line)
 ```php
   'onlyoffice' =>
