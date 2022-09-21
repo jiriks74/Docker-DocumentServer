@@ -100,7 +100,7 @@ volumes:
 - Uncomment the `- LARGER_FILE_LIMITS=true` line in `docker-compose.yml`
 
 ### Generate custom themes
-1. Uncomment the `- ./slideThemes:/var/www/onlyoffice/documentserver/sdkjs/slide/themes/src` line
+1. Uncomment the `- ./slideThemes:/var/www/onlyoffice/documentserver/sdkjs/slide/themes/src` line in `docker-compose.yml`
 2. Put your themes into the `slideThemes` directory
 3. Run `docker exec -it <container-name> /usr/bin/documentserver-generate-allfonts.sh` 
 	- (This will take some time. I have totally 35 themes and it took about 30 minutes to generate them on a Raspberry Pi 4 4GB)
