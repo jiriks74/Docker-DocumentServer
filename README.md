@@ -141,7 +141,7 @@ volumes:
 ##### Building only for the architecture you are building the image on (when building on Raspberry Pi result will be `arm64`, when on pc result will be `amd64`) 
    `docker-compose build` 
    
-##### Building for all supported architectures (you have to have your environment setup for emulation of arm64 with `qemu`) - you have to push to DockerHub
+##### Building for all supported architectures (you have to have your environment setup for emulation of arm64 with `qemu`) - you'll have to push to DockerHub, multiplatform images cannot be saved locally (for whatever reason)
    `docker buildx build --push --platform linux/arm64,linux/amd64,linux/386 .`
    
 #### 3. Create and start the new container
