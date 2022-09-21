@@ -103,7 +103,7 @@ volumes:
 1. Uncomment the `- ./slideThemes:/var/www/onlyoffice/documentserver/sdkjs/slide/themes/src` line in `docker-compose.yml`
 2. Put your themes into the `slideThemes` directory
 3. Run `docker exec -it <container-name> /usr/bin/documentserver-generate-allfonts.sh` 
-	- (This will take some time. I have totally 35 themes and it took about 30 minutes to generate them on a Raspberry Pi 4 4GB)
+	- (This will take some time. I have totally 35 themes and it took about 30 minutes to generate them on a Raspberry Pi 4 4GB on an external HDD - SSD may be faster)
 4. If you want to add more themes later, repeat step 2 and 3.
 
 #### Tags used on DockerHub
