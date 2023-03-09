@@ -12,6 +12,7 @@
 #### This repository is based on the official `Dockerfile` and `docker-compose.yml` files with all the needed files as well
 
 # Table of contents
+
 - [Usage](#usage)
   - [Setting up secret key with nextcloud](#setting-up-secret-key-with-nextcloud)
   - [Larger file limits](#setting-up-larger-file-limits)
@@ -21,11 +22,17 @@
   - [Updating the image yourself](#updating-the-image-yourself)
 
 ## Usage
+
 #### docker-compose with prebuilt image (recommended)
+
 - Docker will pull the correct architecture automatically
-- Below in `Details` you'll find a `docker-compose.yml` templete. To use it, make a directory where data from the container will be saved, create `docker-compose.yml` file in it and put the template from below in it. Then modify the template to your needs.
+- Below in `Details` you'll find a `docker-compose.yml` templete.
+To use it, make a directory where data from the container will be saved, create
+`docker-compose.yml` file in it and put the template from below in it.
+Then modify the template to your needs.
+
 <details>
-	
+
 ```yml
 version: '2'
 services:
@@ -88,14 +95,16 @@ services:
 volumes:
   postgresql_data:
 ```
-	
+
 </details>
 
 ### Setting up `Secret key` with Nextcloud
+
 1. Uncomment four lines starting with `JWT` in `docker-compose`
 2. Set your secret on line `JWT_SECRET=yourSecret`
 3. Open Nexcloud's `config.php` (by default `/var/www/nextcloud/config/config.php`)
 4. Add this to the 2nd last line (before the line with `);`) and paste in your secret (3rd last line)
+
 ```php
   'onlyoffice' =>
     array (
@@ -103,23 +112,30 @@ volumes:
       "jwt_header" => "AuthorizationJwt"
   )
 ```
+
 5. Go to your Nextcloud settings, navigate to Onlyoffice settings
 6. Add your server Address and Secret key
 7. Save
 
 ### Setting up larger file limits
+
 - Uncomment the `- LARGER_FILE_LIMITS=true` line in `docker-compose.yml`
 
 ### Generating custom presentation themes
-1. Uncomment the `- ./slideThemes:/var/www/onlyoffice/documentserver/sdkjs/slide/themes/src` line in `docker-compose.yml`
+
+1. Uncomment the
+`- ./slideThemes:/var/www/onlyoffice/documentserver/sdkjs/slide/themes/src`
+line in `docker-compose.yml`
 2. Put your themes into the `slideThemes` directory
-3. Run `docker exec -it <container-name> /usr/bin/documentserver-generate-allfonts.sh` 
+3. Run `docker exec -it <container-name> /usr/bin/documentserver-generate-allfonts.sh`
 	- (This will take some time. I have totally 35 themes and it took about 30 minutes to generate them on a Raspberry Pi 4 4GB on an external HDD - SSD may be faster)
 4. If you want to add more themes later, repeat step 2 and 3.
 
 ## Tags used on DockerHub
+
 - `latest` - the latest version of the Documentserver
-- Version tags (eg. `7.0.1-37`) - these tags are equal to the Documentserver version of the `onlyoffice-documentserver` debian package used in the image
+- Version tags (eg. `7.0.1-37`) - these tags are equal to the Documentserver
+version of the `onlyoffice-documentserver` debian package used in the image
 
 ## Building the image yourself (not recommended - may take a lot of time)
 
@@ -128,33 +144,43 @@ volumes:
    `git clone https://github.com/jiriks74/Docker-DocumentServer.git && cd Docker-DocumentServer`
 
 #### 2. Build the docker image 
+
 ##### Building only for the architecture you are building the image on (when building on Raspberry Pi result will be `arm64`, when on pc result will be `amd64`) 
+
    `docker-compose build` 
-   
+
 ##### Building for all supported architectures (you have to have your environment setup for emulation of arm64 with `qemu` and build it on `amd64`) - you have to push to DockerHub
+
    `docker buildx build --push --platform linux/arm64,linux/amd64,linux/386 .`
 
 #### 3. Create and start the container
-   `docker-compose up -d` 
+
+   `docker-compose up -d`
+
    - This will start the server. It is set to be automatically started/restarted so as long you have docker running on startup this will start automatically
 
 ### Updating the image yourself
+
 #### 1. Stop and delete the old container
 
    `docker-compose down`
-   
+
 #### 2. (optional) Clear the docker cache 
+
 ####    - ! This will remove all unused cache images ! (good for saving space, bad if you develop with and need cache, but you understand it at that point)
 
    `docker rmi $(docker images -f "dangling=true" -q)`
 
 #### 4. Rebuild the image without cache
-##### Building only for the architecture you are building the image on (when building on Raspberry Pi result will be `arm64`, when on pc result will be `amd64`) 
-   `docker-compose build` 
-   
+
+##### Building only for the architecture you are building the image on (when building on Raspberry Pi result will be `arm64`, when on pc result will be `amd64`)
+
+   `docker-compose build`
+
 ##### Building for all supported architectures (you have to have your environment setup for emulation of arm64 with `qemu`) - you'll have to push to DockerHub, multiplatform images cannot be saved locally (for whatever reason)
+
    `docker buildx build --push --platform linux/arm64,linux/amd64,linux/386 .`
-   
+
 #### 3. Create and start the new container
 
    `docker-compose up -d`
@@ -192,6 +218,8 @@ ONLYOFFICE Document Server is an online office suite comprising viewers and edit
 Starting from version 6.0, Document Server is distributed as ONLYOFFICE Docs. It has [three editions](https://github.com/ONLYOFFICE/DocumentServer#onlyoffice-document-server-editions). With this image, you will install the free Community version. 
 
 ONLYOFFICE Docs can be used as a part of ONLYOFFICE Workspace or with third-party sync&share solutions (e.g. Nextcloud, ownCloud, Seafile) to enable collaborative editing within their interface.
+
+***Important*** Please update `docker-enginge` to latest version (`20.10.21` as of writing this doc) before using it. We use `ubuntu:22.04` as base image and it older versions of docker have compatibility problems with it
 
 ## Functionality ##
 * ONLYOFFICE Document Editor
@@ -353,10 +381,12 @@ Below is the complete list of parameters that can be set using environment varia
 - **AMQP_TYPE**: The message broker type. Supported values are `rabbitmq` or `activemq`. Defaults to `rabbitmq`.
 - **REDIS_SERVER_HOST**: The IP address or the name of the host where the Redis server is running.
 - **REDIS_SERVER_PORT**:  The Redis server port number.
+- **REDIS_SERVER_PASS**: The Redis server password. The password is not set by default.
 - **NGINX_WORKER_PROCESSES**: Defines the number of nginx worker processes.
 - **NGINX_WORKER_CONNECTIONS**: Sets the maximum number of simultaneous connections that can be opened by a nginx worker process.
-- **JWT_ENABLED**: Specifies the enabling the JSON Web Token validation by the ONLYOFFICE Document Server. Defaults to `false`.
-- **JWT_SECRET**: Defines the secret key to validate the JSON Web Token in the request to the ONLYOFFICE Document Server. Defaults to `secret`.
+- **SECURE_LINK_SECRET**: Defines secret for the nginx config directive [secure_link_md5](http://nginx.org/ru/docs/http/ngx_http_secure_link_module.html#secure_link_md5). Defaults to `random string`.
+- **JWT_ENABLED**: Specifies the enabling the JSON Web Token validation by the ONLYOFFICE Document Server. Defaults to `true`.
+- **JWT_SECRET**: Defines the secret key to validate the JSON Web Token in the request to the ONLYOFFICE Document Server. Defaults to random value.
 - **JWT_HEADER**: Defines the http header that will be used to send the JSON Web Token. Defaults to `Authorization`.
 - **JWT_IN_BODY**: Specifies the enabling the token validation in the request body to the ONLYOFFICE Document Server. Defaults to `false`.
 - **WOPI_ENABLED**: Specifies the enabling the wopi handlers. Defaults to `false`.
@@ -384,18 +414,28 @@ Then launch containers on it using the 'docker run --net onlyoffice' option:
 
 Follow [these steps](#installing-mysql) to install MySQL server.
 
-**STEP 3**: Install ONLYOFFICE Document Server.
+**STEP 3**: Generate JWT Secret
+
+JWT secret defines the secret key to validate the JSON Web Token in the request to the **ONLYOFFICE Document Server**. You can specify it yourself or easily get it using the command:
+```
+JWT_SECRET=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c 12);
+```
+
+**STEP 4**: Install ONLYOFFICE Document Server.
 
 ```bash
 sudo docker run --net onlyoffice -i -t -d --restart=always --name onlyoffice-document-server \
-	-v /app/onlyoffice/DocumentServer/logs:/var/log/onlyoffice  \
-	-v /app/onlyoffice/DocumentServer/data:/var/www/onlyoffice/Data  \
-	-v /app/onlyoffice/DocumentServer/lib:/var/lib/onlyoffice \
-	-v /app/onlyoffice/DocumentServer/db:/var/lib/postgresql \
-	onlyoffice/documentserver
+ -e JWT_ENABLED=true \
+ -e JWT_SECRET=${JWT_SECRET} \
+ -e JWT_HEADER=AuthorizationJwt \
+ -v /app/onlyoffice/DocumentServer/logs:/var/log/onlyoffice  \
+ -v /app/onlyoffice/DocumentServer/data:/var/www/onlyoffice/Data  \
+ -v /app/onlyoffice/DocumentServer/lib:/var/lib/onlyoffice \
+ -v /app/onlyoffice/DocumentServer/db:/var/lib/postgresql \
+ onlyoffice/documentserver
 ```
 
-**STEP 4**: Install ONLYOFFICE Mail Server. 
+**STEP 5**: Install ONLYOFFICE Mail Server. 
 
 For the mail server correct work you need to specify its hostname 'yourdomain.com'.
 
@@ -417,10 +457,10 @@ The additional parameters for mail server are available [here](https://github.co
 
 To learn more, refer to the [ONLYOFFICE Mail Server documentation](https://github.com/ONLYOFFICE/Docker-MailServer "ONLYOFFICE Mail Server documentation").
 
-**STEP 5**: Install ONLYOFFICE Community Server
+**STEP 6**: Install ONLYOFFICE Community Server
 
 ```bash
-sudo docker run --net onlyoffice -i -t -d --restart=always --name onlyoffice-community-server -p 80:80 -p 443:443 -p 5222:5222 \
+sudo docker run --net onlyoffice -i -t -d --privileged --restart=always --name onlyoffice-community-server -p 80:80 -p 443:443 -p 5222:5222 --cgroupns=host \
  -e MYSQL_SERVER_ROOT_PASSWORD=my-secret-pw \
  -e MYSQL_SERVER_DB_NAME=onlyoffice \
  -e MYSQL_SERVER_HOST=onlyoffice-mysql-server \
@@ -428,6 +468,9 @@ sudo docker run --net onlyoffice -i -t -d --restart=always --name onlyoffice-com
  -e MYSQL_SERVER_PASS=onlyoffice_pass \
  
  -e DOCUMENT_SERVER_PORT_80_TCP_ADDR=onlyoffice-document-server \
+ -e DOCUMENT_SERVER_JWT_ENABLED=true \
+ -e DOCUMENT_SERVER_JWT_SECRET=${JWT_SECRET} \
+ -e DOCUMENT_SERVER_JWT_HEADER=AuthorizationJwt \
  
  -e MAIL_SERVER_API_HOST=${MAIL_SERVER_IP} \
  -e MAIL_SERVER_DB_HOST=onlyoffice-mysql-server \
@@ -438,12 +481,14 @@ sudo docker run --net onlyoffice -i -t -d --restart=always --name onlyoffice-com
  
  -v /app/onlyoffice/CommunityServer/data:/var/www/onlyoffice/Data \
  -v /app/onlyoffice/CommunityServer/logs:/var/log/onlyoffice \
+ -v /app/onlyoffice/CommunityServer/letsencrypt:/etc/letsencrypt \
+ -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
  onlyoffice/communityserver
 ```
 
 Where `${MAIL_SERVER_IP}` is the IP address for **ONLYOFFICE Mail Server**. You can easily get it using the command:
 ```
-docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' onlyoffice-mail-server
+MAIL_SERVER_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' onlyoffice-mail-server)
 ```
 
 Alternatively, you can use an automatic installation script to install the whole ONLYOFFICE Community Edition at once. For the mail server correct work you need to specify its hostname 'yourdomain.com'.
@@ -505,6 +550,5 @@ If you have any problems with or questions about this image, please visit our of
 
   [1]: https://forum.onlyoffice.com
   [2]: https://stackoverflow.com/questions/tagged/onlyoffice
-
 	
 </details>

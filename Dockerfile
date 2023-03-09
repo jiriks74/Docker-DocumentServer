@@ -1,21 +1,17 @@
-ARG ARCH=
-FROM ${ARCH}debian:bullseye
-LABEL maintainer jiriks74 <jiri.stefka.js@gmail.com>
+ARG BASE_IMAGE=ubuntu:22.04
 
-RUN echo "deb http://deb.debian.org/debian bullseye main contrib non-free\ndeb http://deb.debian.org/debian-security/ bullseye-security main contrib non-free\ndeb http://deb.debian.org/debian bullseye-updates main contrib non-free\ndeb http://deb.debian.org/debian bullseye-backports main" > /etc/apt/sources.list
+FROM ${BASE_IMAGE} as documentserver
+LABEL maintainer Jiří Štefka <jiri.stefka.js@gmail.com>
 
-ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8 DEBIAN_FRONTEND=noninteractive PG_VERSION=13
+ARG PG_VERSION=14
+
+ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8 DEBIAN_FRONTEND=noninteractive PG_VERSION=${PG_VERSION}
 
 ARG ONLYOFFICE_VALUE=onlyoffice
 
-RUN /bin/sh -c "while [ ! nc -z localhost 5432 ]; do sleep 0.1; done"
-
 RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d && \
     apt-get -y update && \
-    apt-get -yq install wget apt-transport-https gnupg locales && \
-    mkdir -p $HOME/.gnupg && \
-    gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/onlyoffice.gpg --keyserver keyserver.ubuntu.com --recv-keys 0x8320ca65cb2de8e5 && \
-    chmod 644 /etc/apt/trusted.gpg.d/onlyoffice.gpg && \
+    apt-get -yq install wget apt-transport-https gnupg locales lsb-release && \
     locale-gen en_US.UTF-8 && \
     echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections && \
     apt-get -yq install \
@@ -38,7 +34,7 @@ RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d && \
         libxml2 \
         libxss1 \
         libxtst6 \
-        mariadb-client \
+        mysql-client \
         nano \
         net-tools \
         netcat-openbsd \
@@ -71,32 +67,34 @@ RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d && \
     service nginx stop && \
     rm -rf /var/lib/apt/lists/*
 
+COPY config /app/ds/setup/config/
+COPY run-document-server.sh /app/ds/run-document-server.sh
+
 EXPOSE 80 443
 
 ARG COMPANY_NAME=onlyoffice
 ARG PRODUCT_NAME=documentserver
+ARG PRODUCT_EDITION=
+ARG PACKAGE_VERSION=
+ARG TARGETARCH
+ARG PACKAGE_BASEURL="http://download.onlyoffice.com/install/documentserver/linux"
 
 ENV COMPANY_NAME=$COMPANY_NAME \
-    PRODUCT_NAME=$PRODUCT_NAME
+    PRODUCT_NAME=$PRODUCT_NAME \
+    PRODUCT_EDITION=$PRODUCT_EDITION \
+    DS_DOCKER_INSTALLATION=true
 
-RUN /bin/sh -c "while [ ! nc -z localhost 5432 ]; do sleep 0.1; done"
-
-RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
-    wget -q -P /tmp "http://download.onlyoffice.com/install/documentserver/linux/${COMPANY_NAME}-${PRODUCT_NAME}_${arch}.deb" && \
+RUN PACKAGE_FILE="${COMPANY_NAME}-${PRODUCT_NAME}${PRODUCT_EDITION}${PACKAGE_VERSION:+_$PACKAGE_VERSION}_${TARGETARCH:-$(dpkg --print-architecture)}.deb" && \
+    wget -q -P /tmp "$PACKAGE_BASEURL/$PACKAGE_FILE" && \
     apt-get -y update && \
     service postgresql start && \
-    apt-get -yq install /tmp/$(basename "${COMPANY_NAME}-${PRODUCT_NAME}_${arch}.deb") && \
+    apt-get -yq install /tmp/$PACKAGE_FILE && \
     service postgresql stop && \
     service supervisor stop && \
-    rm -f /tmp/"${COMPANY_NAME}-${PRODUCT_NAME}_${arch}.deb" && \
+    chmod 755 /app/ds/*.sh && \
+    rm -f /tmp/$PACKAGE_FILE && \
     rm -rf /var/log/$COMPANY_NAME && \
     rm -rf /var/lib/apt/lists/*
-
-COPY config /app/ds/setup/config/
-COPY run-document-server.sh /app/ds/run-document-server.sh
-
-
-RUN chmod 755 /app/ds/*.sh 
 
 VOLUME /var/log/$COMPANY_NAME /var/lib/$COMPANY_NAME /var/www/$COMPANY_NAME/Data /var/lib/postgresql /var/lib/rabbitmq /var/lib/redis /usr/share/fonts/truetype/custom
 
