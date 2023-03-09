@@ -1,5 +1,3 @@
-# NOW WORKING FOR `amd64` and `arm64` natively!
-
 [![Docker Pulls](https://img.shields.io/docker/pulls/jiriks74/onlyoffice-documentserver.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver)
 [![Docker Stars](https://img.shields.io/docker/stars/jiriks74/onlyoffice-documentserver.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=stars&logo=docker)](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver)
 [![Docker Size](https://img.shields.io/docker/image-size/jiriks74/onlyoffice-documentserver/latest.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=Size&logo=docker)](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver)
