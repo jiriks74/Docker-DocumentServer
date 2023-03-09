@@ -1,5 +1,3 @@
-# ARCHIVED AS THERE'S NOW AN OFFICIAL [ARM64 DOCKER IMAGE](https://hub.docker.com/r/onlyoffice/documentserver/tags)
-
 # NOW WORKING FOR `amd64` and `arm64` natively!
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/jiriks74/onlyoffice-documentserver.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/r/jiriks74/onlyoffice-documentserver)
